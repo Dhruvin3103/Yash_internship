@@ -26,7 +26,7 @@ def scrape_top_search_results(search_query):
     # Find the search results elements
     product_cards = driver.find_elements(By.CSS_SELECTOR, "section.product-card-container")  # Adjust the CSS selector for search result items
 
-    for i,card in enumerate(product_cards[:5]):
+    for i,card in enumerate(product_cards[:2]):
         try:
             product_name = card.find_element(By.TAG_NAME, "img")
             image_data = []
@@ -37,23 +37,21 @@ def scrape_top_search_results(search_query):
             print(image_data,'<-- prod_name')
             rating = card.find_element(By.XPATH, F'//*[@id="product-grid"]/section[{i}]/div/a/div/figure/article/span').text
             print(rating)
+            product_name.click()
+            # print(product_name)
+            time.sleep(5)
+            section_element = product_name.find_elements(By.XPATH, '/html/body/div[4]/div[1]/main/div[1]/section/div[1]/div/div/figure[2]').text
+            print(section_element)
+            img_crd = section_element.find_element(By.TAG_NAME, "img")
+            img_src, img_alt = section_element.get_attribute("src"), section_element.get_attribute("src")
+            if image_src: 
+                image_data.append({"src": image_src, "alt": image_alt})
+            print(image_data,'<-- prod_name by clicking on it ')
         except Exception as e:
-            print('exec')
-    # product_rating = card.find_element(By.CSS_SELECTOR, "article svg + span").text
-    #     product_price = card.find_element(By.CSS_SELECTOR, "section.flex-wrap span.productPrice").text
-    #     product_data.append({"name": product_name, "rating": product_rating, "price": product_price})
-    
-    # # Close the WebDriver
-    # driver.quit()
-    # print(product_data)
+            print(e)
+
     return []
 
 user_search_query = 'shirt'
 top_5_results = scrape_top_search_results(user_search_query)
 print("Top 5 search results:")
-# # for i, data in enumerate(top_5_results, 1):
-#     print(f"Product {i}:")
-#     print(f"Name: {data['name']}")
-#     print(f"Rating: {data['rating']}")
-#     print(f"Price: {data['price']}")
-#     print()
