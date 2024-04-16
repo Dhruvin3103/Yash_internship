@@ -49,28 +49,33 @@ def scrape_top_search_results(search_query,more_images):
     #         print(e)
     #     result.append(image_data)
     # #now its turn for myntra :)
-    driver.get("https://www.myntra.com/")
-    search_input = driver.find_element(By.CSS_SELECTOR,".desktop-searchBar")
+    driver.get("https://www.amazon.in/")
+    print('started ---- > ')
+    search_input = driver.find_element(By.ID,"twotabsearchtextbox")
+    print('serach element ')
+    print(search_input.text)
     search_input.send_keys(search_query)
     search_input.send_keys(Keys.RETURN)
     time.sleep(5)
-    product_cards = driver.find_elements(By.CSS_SELECTOR,"li.product-base")
+    product_cards = driver.find_elements(By.CSS_SELECTOR,"img.s-image")
     print(len(product_cards))
-    for i,card in enumerate(product_cards[:2]):
-        try:
-            # print(i)
-            prod_url = card.find_element(By.XPATH, f'//*[@id="desktopSearchResults"]/div[2]/section/ul/li[{i+1}]/a').get_attribute("href")
-            print(prod_url)
-            res = requests.get(prod_url)
-            soup = BeautifulSoup(res.text, 'html.parser')
-            # # with  open('test.txt', 'w', encoding='utf-8') as file:
-            # #     file.write(str(soup.prettify))
-            # grid = soup.find_all('div', class_='image-grid-image')
-            # for i in grid:
-            #     print(i)
-            # print(soup.prettify())
-        except Exception as e:
-            print('except')
+    image_urls = [img.get_attribute("src") for img in product_cards]
+    
+    for url in product_cards[:2]:
+        prod_url = url.get_attribute("href")
+        res = requests.get(prod_url)
+        soup = BeautifulSoup(res.text, 'html.parser')
+        with  open('test.txt', 'w', encoding='utf-8') as file:
+            file.write(str(soup.prettify))
+        url.click()
+        
+        time.sleep(5)
+        print
+        for i in range(2):
+            img_tag = driver.find_element(By.CLASS_NAME,f'li.a-spacing-small item imageThumbnail a-declarative')
+            print(img_tag.text,"<-- anythung here ")
+            print(img_tag.get_attribute("src"),img_tag.get_attribute("alt"))
+    
     driver.quit()
     return []
     
