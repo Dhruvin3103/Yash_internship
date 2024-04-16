@@ -54,8 +54,25 @@ def scrape_top_search_results(search_query,more_images):
     search_input.send_keys(search_query)
     search_input.send_keys(Keys.RETURN)
     time.sleep(5)
+    product_cards = driver.find_elements(By.CSS_SELECTOR,"li.product-base")
+    print(len(product_cards))
+    for i,card in enumerate(product_cards[:2]):
+        try:
+            # print(i)
+            prod_url = card.find_element(By.XPATH, f'//*[@id="desktopSearchResults"]/div[2]/section/ul/li[{i+1}]/a').get_attribute("href")
+            print(prod_url)
+            res = requests.get(prod_url)
+            soup = BeautifulSoup(res.text, 'html.parser')
+            # # with  open('test.txt', 'w', encoding='utf-8') as file:
+            # #     file.write(str(soup.prettify))
+            # grid = soup.find_all('div', class_='image-grid-image')
+            # for i in grid:
+            #     print(i)
+            # print(soup.prettify())
+        except Exception as e:
+            print('except')
     driver.quit()
-    return result
+    return []
     
 
 res = scrape_top_search_results('shirt',False)
