@@ -1,0 +1,27 @@
+DevTools listening on ws://127.0.0.1:60819/devtools/browser/f4947d56-5bba-49b1-95ba-f932b3f5c7d2
+bewakoof --------> : 
+[{'src': 'https://images.bewakoof.com/t320/men-s-black-nasa-printed-oversized-plus-size-shirt-604485-1701779938-1.jpg', 'alt': 'product-image', 'rating': '4.5'}] <-- prod_name
+more images : 
+ [{'src': 'https://shop.bewakoof.com/cdn/shop/files/men-s-black-nasa-printed-oversized-plus-size-shirt-604485-1701779938-1.jpg?v=1712057905', 'alt': 'black'}, {'src': 'https://shop.bewakoof.com/cdn/shop/files/men-s-black-nasa-printed-oversized-plus-size-shirt-604485-1701779944-2.jpg?v=1712057905', 'alt': 'black'}, {'src': 'https://shop.bewakoof.com/cdn/shop/files/men-s-black-nasa-printed-oversized-plus-size-shirt-604485-1701779949-3.jpg?v=1712057905', 'alt': 'black'}, {'src': 'https://shop.bewakoof.com/cdn/shop/files/men-s-black-nasa-printed-oversized-plus-size-shirt-604485-1701779955-4.jpg?v=1712057905', 'alt': 'black'}]
+[{'src': 'https://images.bewakoof.com/t320/men-s-dark-olive-green-loon-printed-oversized-plus-size-shacket-604469-1707309981-1.jpg', 'alt': 'product-image', 'rating': '4.5'}] <-- prod_name
+more images : 
+ [{'src': 'https://shop.bewakoof.com/cdn/shop/files/men-s-dark-olive-green-loon-printed-oversized-plus-size-shacket-604469-1707309981-1_445dc1ed-81b6-4bc8-be26-4b5aed475c22.jpg?v=1712642258', 'alt': 'green'}, {'src': 'https://shop.bewakoof.com/cdn/shop/files/men-s-dark-olive-green-loon-printed-oversized-plus-size-shacket-604469-1707309986-2_6c7c02d4-3cf4-4540-ac2a-a4b342bc2a27.jpg?v=1712642258', 'alt': 'green'}, {'src': 'https://shop.bewakoof.com/cdn/shop/files/men-s-dark-olive-green-loon-printed-oversized-plus-size-shacket-604469-1707309992-4_4bb0234a-e852-4aa2-8176-6694556c3deb.jpg?v=1712642258', 'alt': 'green'}, {'src': 'https://shop.bewakoof.com/cdn/shop/files/men-s-dark-olive-green-loon-printed-oversized-plus-size-shacket-604469-1707309997-5_2312eeeb-3e1f-4195-a5a8-3b166467415a.jpg?v=1712642258', 'alt': 'green'}]
+[{'src': 'https://images.bewakoof.com/t320/women-s-multicolor-all-over-printed-oversized-crop-shirt-628170-1711613675-1.jpg', 'alt': 'product-image', 'rating': '4.5'}] <-- prod_name
+more images : 
+ [{'src': 'https://shop.bewakoof.com/cdn/shop/files/women-s-multicolor-all-over-printed-oversized-crop-shirt-628170-1711613675-1.jpg?v=1712057897', 'alt': "Women's Green All Over Printed Oversized Crop Shirt"}, {'src': 'https://shop.bewakoof.com/cdn/shop/files/women-s-multicolor-all-over-printed-oversized-crop-shirt-628170-1711613681-2.jpg?v=1712057897', 'alt': "Women's Green All Over Printed Oversized Crop Shirt"}, {'src': 'https://shop.bewakoof.com/cdn/shop/files/women-s-multicolor-all-over-printed-oversized-crop-shirt-628170-1711613687-3.jpg?v=1712057897', 'alt': "Women's Green All Over Printed Oversized Crop Shirt"}, {'src': 'https://shop.bewakoof.com/cdn/shop/files/women-s-multicolor-all-over-printed-oversized-crop-shirt-628170-1711613692-4.jpg?v=1712057897', 'alt': "Women's Green All Over Printed Oversized Crop Shirt"}]
+[{'src': 'https://images.bewakoof.com/t320/men-s-multicolor-all-over-printed-shirt-624320-1711613646-1.jpg', 'alt': 'product-image', 'rating': '4.5'}] <-- prod_name
+more images : 
+ [{'src': 'https://shop.bewakoof.com/cdn/shop/files/men-s-multicolor-all-over-printed-shirt-624320-1711613646-1.jpg?v=1711708883', 'alt': "Men's Multicolor Peanuts All Over Printed Oversized Shirt"}, {'src': 'https://shop.bewakoof.com/cdn/shop/files/men-s-multicolor-all-over-printed-shirt-624320-1711613652-2.jpg?v=1711708883', 'alt': "Men's Multicolor Peanuts All Over Printed Oversized Shirt"}, {'src': 'https://shop.bewakoof.com/cdn/shop/files/men-s-multicolor-all-over-printed-shirt-624320-1711613658-3.jpg?v=1711708883', 'alt': "Men's Multicolor Peanuts All Over Printed Oversized Shirt"}, {'src': 'https://shop.bewakoof.com/cdn/shop/files/men-s-multicolor-all-over-printed-shirt-624320-1711613664-4.jpg?v=1711708883', 'alt': "Men's Multicolor Peanuts All Over Printed Oversized Shirt"}]
+[{'src': 'https://images.bewakoof.com/t320/women-s-white-lead-printed-oversized-crop-shirt-628169-1711613412-1.jpg', 'alt': 'product-image', 'rating': '4.5'}] <-- prod_name
+more images : 
+ [{'src': 'https://shop.bewakoof.com/cdn/shop/files/women-s-white-lead-printed-oversized-crop-shirt-628169-1711613412-1_06ea3da0-e79d-491a-a67b-c5d9d5b50a07.jpg?v=1711633040', 'alt': 'white'}, {'src': 'https://shop.bewakoof.com/cdn/shop/files/women-s-white-lead-printed-oversized-crop-shirt-628169-1711613418-2_5a4bb722-ac60-4ac0-9e9e-e2860b12064e.jpg?v=1711633040', 'alt': 'white'}, {'src': 'https://shop.bewakoof.com/cdn/shop/files/women-s-white-lead-printed-oversized-crop-shirt-628169-1711613424-3_5199c0a3-a926-4647-87e9-37ca1ff62753.jpg?v=1711633040', 'alt': 'white'}, {'src': 'https://shop.bewakoof.com/cdn/shop/files/women-s-white-lead-printed-oversized-crop-shirt-628169-1711613429-4_e527ae92-89cc-4dae-8c84-9ac86c118ba7.jpg?v=1711633040', 'alt': 'white'}]
+Amazon  ---- > 
+serach element 
+
+48
+https://m.media-amazon.com/images/I/51yIybqYFTL._AC_UL320_.jpg
+https://m.media-amazon.com/images/I/81dszCJ0etL._AC_UL320_.jpg
+https://m.media-amazon.com/images/I/71ROidI7t8L._AC_UL320_.jpg
+https://m.media-amazon.com/images/I/618LbDYIVRL._AC_UL320_.jpg
+https://m.media-amazon.com/images/I/81CPcoWbLaL._AC_UL320_.jpg
+[]
