@@ -1,19 +1,15 @@
-import gradio as gr
+import streamlit as st
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 from bs4 import BeautifulSoup
 from PIL import Image
 from io import BytesIO
 import requests
 import time
-import gradio as gr
 
-def scrape_from_bewakoof(search_query,more_images):
+def scrape_from_bewakoof(search_query, more_images):
     driver = webdriver.Chrome()
-    print("bewakoof --------> : ")
     driver.get("https://shop.bewakoof.com/")
     search_input = driver.find_element(By.CSS_SELECTOR, ".search-input-field")
     search_input.send_keys(search_query)
@@ -28,12 +24,15 @@ def scrape_from_bewakoof(search_query,more_images):
             image_src = product_name.get_attribute("src")
             image_alt = product_name.get_attribute("alt")
             rating = card.find_element(By.XPATH, f'//*[@id="product-grid"]/section[{i+1}]/div/a/div/figure/article/span').text
+            name = card.find_element(By.TAG_NAME,f'h3').text
+            price = card.find_element(By.XPATH,f'//*[@id="product-grid"]/section[{i+1}]/div/section/section/span[1]').text
             if image_src:
                 image_data["src"] = image_src
                 image_data["alt"] = image_alt
                 image_data["rating"] = rating
-                result.append(image_data['src'])
-            print(image_data, '<-- prod_name')
+                image_data["name"] = name
+                image_data["price"] = price
+                result.append(image_data)
             product_link = card.find_element(By.XPATH, f'//*[@id="product-grid"]/section[{i+1}]/div/a')
             product_url = product_link.get_attribute("href")
             res = requests.get(product_url)
@@ -46,50 +45,52 @@ def scrape_from_bewakoof(search_query,more_images):
                         image_src = img_tag['src']
                         image_alt = img_tag.get('alt', '')
                         image_data = {"src": "https:"+image_src, "alt": image_alt}
-                        result.append(image_data["src"])
-                        print(f"more images : \n {image_data}")
+                        result.append(image_data)
         except Exception as e:
             print(e)
+    print(result)
+    driver.quit()
     return result        
-    
+
 def scrape_from_amazon(search_query, more_images):
     driver = webdriver.Chrome()
     result = []
     driver.get("https://www.amazon.in/")
-    print('Amazon  ---- > ')
     search_input = driver.find_element(By.ID, "twotabsearchtextbox")
-    print('serach element ')
-    print(search_input.text)
     search_input.send_keys(search_query)
     search_input.send_keys(Keys.RETURN)
     time.sleep(5)
     product_cards = driver.find_elements(By.CSS_SELECTOR, "img.s-image")
-    print(len(product_cards))
     image_urls = [img.get_attribute("src") for img in product_cards]
     for i in image_urls[:5]:
         result.append(i)
     driver.quit()
-    print(result)
     return result
 
-def gr_scrape_top_search_results(search_query="shirt", more_images=True):
-    results = scrape_from_bewakoof(search_query, more_images)
-    print('in displaying ')
-    print(results,'res')
+def gr_scrape_top_search_results(search_query="shirt", website="Bewakoof", more_images=False):
+    if website == "Bewakoof":
+        results = scrape_from_bewakoof(search_query, more_images)
+    elif website == "Amazon":
+        results = scrape_from_amazon(search_query, more_images)
     images = []
-    for url in results:
-        response = requests.get(url)
+    print(results)
+    for data in results:
+        response = requests.get(data['src'])
         img = Image.open(BytesIO(response.content))
-        print(img)
-        images.append(img)
-    print(images)
-    print('hellu')
+        images.append((img, data['name'], data['rating'], data['price']))
     return images
 
-iface = gr.Interface(
-    gr_scrape_top_search_results,
-    ["text", "checkbox"],
-    ['image','image','image','image','image'],
-    title="Top Search Results",
-)
-iface.launch()
+st.title("Top Search Results")
+
+search_query = st.text_input("Enter search query", "shirt")
+website = st.radio("Select Website", ("Bewakoof", "Amazon"))
+
+if st.button("Search"):
+    images_data = gr_scrape_top_search_results(search_query, website)
+
+    cols = st.columns(5)  # Display 5 images per row
+    for i, (img, name, rating, price) in enumerate(images_data):
+        with cols[i % 5]:
+            st.image(img, caption=f"{name}, {rating}, {price}", use_column_width=True, output_format='JPEG')
+            if st.button(label="Click Me", key=i):
+                st.write(f"You clicked on image {name}!")
