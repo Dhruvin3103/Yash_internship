@@ -67,11 +67,36 @@ def scrape_from_amazon(search_query, more_images):
     driver.quit()
     return result
 
+def scrape_from_ajio(search_query, more_images):
+    driver = webdriver.Chrome()
+    result = []
+    driver.get("https://www.ajio.com/")
+    search_input = driver.find_element(By.XPATH,'//*[@id="appContainer"]/div[1]/div/header/div[3]/div[2]/form/div/div/input')
+    search_input.send_keys(search_query)
+    search_input.send_keys(Keys.RETURN)
+    time.sleep(5)
+    product_cards = driver.find_elements(By.XPATH, '//*[@id="main-content"]/div[1]/div/div')
+    print(len(product_cards))
+    
+    for i,card in enumerate(product_cards[:5]):
+        img_data = {}
+        img_data['src'] = card.find_element(By.TAG_NAME,"img").get_attribute("src")
+        img_data['name'] = card.find_element(By.XPATH,f'//*[@id="{str(i)}"]/a/div/div[2]/div[2]').text
+        img_data['price'] = card.find_element(By.XPATH,f'//*[@id="{str(i)}"]/a/div/div[2]/div[4]').text.split(" ",1)[0]
+        img_data['rating'] = card.find_element(By.XPATH,f'//*[@id="{str(i)}"]/a/div/div[2]/div[3]/div/p').text
+        # print(src,name,rating)
+        # print(price.split(" ",1)[0])
+        # img_data['src']
+        result.append(img_data)
+    return result
+
 def gr_scrape_top_search_results(search_query="shirt", website="Bewakoof", more_images=False):
     if website == "Bewakoof":
         results = scrape_from_bewakoof(search_query, more_images)
     elif website == "Amazon":
         results = scrape_from_amazon(search_query, more_images)
+    elif website == "Ajio":
+        results = scrape_from_ajio(search_query,more_images)
     images = []
     print(results)
     for data in results:
@@ -83,7 +108,7 @@ def gr_scrape_top_search_results(search_query="shirt", website="Bewakoof", more_
 st.title("Top Search Results")
 
 search_query = st.text_input("Enter search query", "shirt")
-website = st.radio("Select Website", ("Bewakoof", "Amazon"))
+website = st.radio("Select Website", ("Bewakoof", "Amazon","Ajio"))
 
 if st.button("Search"):
     images_data = gr_scrape_top_search_results(search_query, website)
@@ -92,5 +117,7 @@ if st.button("Search"):
     for i, (img, name, rating, price) in enumerate(images_data):
         with cols[i % 5]:
             st.image(img, caption=f"{name}, {rating}, {price}", use_column_width=True, output_format='JPEG')
-            if st.button(label="Click Me", key=i):
+            if st.button(label="Try on", key=i):
                 st.write(f"You clicked on image {name}!")
+
+# scrape_from_ajio('shirt',False)
