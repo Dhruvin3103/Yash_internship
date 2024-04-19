@@ -19,25 +19,21 @@ def scrape_from_bewakoof(search_query, more_images):
     result = []
     for i, card in enumerate(product_cards[:5]):
         try:
-            product_name = card.find_element(By.TAG_NAME, "img")
             image_data = {}
-            image_src = product_name.get_attribute("src")
-            image_alt = product_name.get_attribute("alt")
-            rating = card.find_element(By.XPATH, f'//*[@id="product-grid"]/section[{i+1}]/div/a/div/figure/article/span').text
-            name = card.find_element(By.TAG_NAME,f'h3').text
-            price = card.find_element(By.XPATH,f'//*[@id="product-grid"]/section[{i+1}]/div/section/section/span[1]').text
-            if image_src:
-                image_data["src"] = image_src
-                image_data["alt"] = image_alt
-                image_data["rating"] = rating
-                image_data["name"] = name
-                image_data["price"] = price
-                result.append(image_data)
-            product_link = card.find_element(By.XPATH, f'//*[@id="product-grid"]/section[{i+1}]/div/a')
-            product_url = product_link.get_attribute("href")
-            res = requests.get(product_url)
-            soup = BeautifulSoup(res.text, 'html.parser')
+            try:image_data["src"] = card.find_element(By.TAG_NAME, "img").get_attribute("src")
+            except Exception as e:image_data["src"] = None;print(e)
+            try:image_data["rating"] = card.find_element(By.XPATH, f'//*[@id="product-grid"]/section[{i+1}]/div/a/div/figure/article/span').text
+            except Exception as e:image_data["rating"] = None;print(e)
+            try:image_data["name"] = card.find_element(By.TAG_NAME,f'h3').text
+            except Exception as e:image_data["name"] =None;print(e)
+            try:image_data["price"] = card.find_element(By.XPATH,f'//*[@id="product-grid"]/section[{i+1}]/div/section/section/span[1]').text
+            except Exception as e:image_data["price"]=None;print(e)
+            result.append(image_data)
             if more_images:
+                product_link = card.find_element(By.XPATH, f'//*[@id="product-grid"]/section[{i+1}]/div/a')
+                product_url = product_link.get_attribute("href")
+                res = requests.get(product_url)
+                soup = BeautifulSoup(res.text, 'html.parser')
                 swiper_slides = soup.find_all('figure', class_='swiper-slide')
                 for swiper_slide in swiper_slides[:4]:
                     img_tag = swiper_slide.find('img')
@@ -55,15 +51,46 @@ def scrape_from_bewakoof(search_query, more_images):
 def scrape_from_amazon(search_query, more_images):
     driver = webdriver.Chrome()
     result = []
+    
     driver.get("https://www.amazon.in/")
     search_input = driver.find_element(By.ID, "twotabsearchtextbox")
     search_input.send_keys(search_query)
     search_input.send_keys(Keys.RETURN)
-    time.sleep(5)
+    time.sleep(3)
     product_cards = driver.find_elements(By.CSS_SELECTOR, "img.s-image")
+    print(len(product_cards))
     image_urls = [img.get_attribute("src") for img in product_cards]
     for i in image_urls[:5]:
-        result.append(i)
+        image_data = {}
+        try:image_data["src"] = i
+        except Exception as e:image_data["src"]=None;print(e)
+        try:image_data["rating"] = 'to be added'
+        except Exception as e:image_data["rating"]=None;print(e)
+        try:image_data["name"] = 'to be added'
+        except Exception as e:image_data["name"]=None;print(e)
+        try:image_data["price"] = 'to be added '
+        except Exception as e:image_data["price"]=None;print(e)
+        result.append(image_data)
+    # product_cards = driver.find_elements(By.CSS_SELECTOR, 'div.sg-col-inner')
+    # print(len(product_cards))
+    # for i in range(1,6):
+        
+    #     # src = driver.find_element(By.XPATH,f'').get_attribute('src')
+    #     name = driver.find_element(By.CSS_SELECTOR,f'span.a-size-base-plus a-color-base a-text-normal')
+    #     print(name)    
+    # # for i,card in enumerate(product_cards):
+    # #     try:
+    #         src  = card.find_element(By.XPATH,f'//*[@id="search"]/div[1]/div[1]/div/span[1]/div[1]/div[{i+1}]/div/div/span/div/div/div[2]/div/span/a/div/img').get_attribute('src')
+    #         price = card.find_element(By.XPATH,f'//*[@id="search"]/div[1]/div[1]/div/span[1]/div[1]/div[{i+1}]/div/div/div/div/span/div/div/div[2]/div[3]/div/div[1]/a/span/span[2]/span[2]').text
+    #         rating = 'NA'
+    #         name = card.find_element(By.XPATH,f'//*[@id="search"]/div[1]/div[1]/div/span[1]/div[1]/div[{i+1}]/div/div/div/div/span/div/div/div[2]/div[2]/h2/a/span') 
+    #         print(src,price,name,rating)
+    #     except Exception as e:
+    #         print('f up !!')
+    #         pass
+    # image_urls = [img.get_attribute("src") for img in product_cards]
+    # for i in image_urls[:5]:
+    #     result.append(i)
     driver.quit()
     return result
 
@@ -80,13 +107,14 @@ def scrape_from_ajio(search_query, more_images):
     
     for i,card in enumerate(product_cards[:5]):
         img_data = {}
-        img_data['src'] = card.find_element(By.TAG_NAME,"img").get_attribute("src")
-        img_data['name'] = card.find_element(By.XPATH,f'//*[@id="{str(i)}"]/a/div/div[2]/div[2]').text
-        img_data['price'] = card.find_element(By.XPATH,f'//*[@id="{str(i)}"]/a/div/div[2]/div[4]').text.split(" ",1)[0]
-        img_data['rating'] = card.find_element(By.XPATH,f'//*[@id="{str(i)}"]/a/div/div[2]/div[3]/div/p').text
-        # print(src,name,rating)
-        # print(price.split(" ",1)[0])
-        # img_data['src']
+        try: img_data['src'] = card.find_element(By.TAG_NAME,"img").get_attribute("src")
+        except Exception as e:img_data['src']=None
+        try:img_data['name'] = card.find_element(By.XPATH,f'//*[@id="{str(i)}"]/a/div/div[2]/div[2]').text
+        except Exception as e:img_data['name']=None        
+        try:img_data['price'] = card.find_element(By.CSS_SELECTOR,f'span.price  ').text
+        except Exception as e:img_data['price'] = None
+        try:img_data['rating'] = card.find_element(By.XPATH,f'//*[@id="{str(i)}"]/a/div/div[2]/div[3]/div/p').text
+        except Exception as e:img_data['rating']='na'
         result.append(img_data)
     return result
 
@@ -109,15 +137,15 @@ st.title("Top Search Results")
 
 search_query = st.text_input("Enter search query", "shirt")
 website = st.radio("Select Website", ("Bewakoof", "Amazon","Ajio"))
-
+more_images = st.checkbox("More Images", False)
 if st.button("Search"):
-    images_data = gr_scrape_top_search_results(search_query, website)
+    images_data = gr_scrape_top_search_results(search_query, website,more_images)
 
     cols = st.columns(5)  # Display 5 images per row
     for i, (img, name, rating, price) in enumerate(images_data):
         with cols[i % 5]:
-            st.image(img, caption=f"{name}, {rating}, {price}", use_column_width=True, output_format='JPEG')
+            st.image(img, caption=f"{name}, {rating}⭐, {price}", use_column_width=True, output_format='JPEG')
             if st.button(label="Try on", key=i):
                 st.write(f"You clicked on image {name}!")
 
-# scrape_from_ajio('shirt',False)
+# scrape_from_amazon('shirt',False)
