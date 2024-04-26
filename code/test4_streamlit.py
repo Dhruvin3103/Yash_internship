@@ -140,7 +140,8 @@ website = st.radio("Select Website", ("Bewakoof", "Amazon","Ajio"))
 more_images = st.checkbox("More Images", False)
 if st.button("Search"):
     images_data = gr_scrape_top_search_results(search_query, website,more_images)
-
+    if len(images_data):
+        st.write('No data was scraped')
     cols = st.columns(5)  # Display 5 images per row
     for i, (img, name, rating, price) in enumerate(images_data):
         with cols[i % 5]:
