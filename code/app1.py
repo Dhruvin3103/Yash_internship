@@ -1,18 +1,19 @@
 import streamlit as st
 import replicate
-from PIL import Image
-import requests
-from io import BytesIO
 import tempfile
+import time
+import requests
+import cloudinary.uploader
+from PIL import Image
+from io import BytesIO
 from gradio_client import Client
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from bs4 import BeautifulSoup
 from test4_streamlit import scrape_from_bewakoof,scrape_from_amazon,scrape_from_ajio
-import time
+# from gif_gen import create_gif
 from decouple import config
-import cloudinary.uploader
 
 
 class MultiViewDiffusionModel:
@@ -28,10 +29,88 @@ st.set_page_config(page_title="SOTA VTON")
 # Title
 st.title("State Of The Art VTON")
 # Tabs
-tabs = st.tabs(["VTON", "Garment Search", "betterlook","multiview"])
+tabs = st.tabs(["VTON", "Garment Search","multiview"])
 # VTON Tab
+
+def enhance(img):
+    print(img)
+    print('running','gif wala ')
+    output = replicate.run(
+        "batouresearch/magic-image-refiner:507ddf6f977a7e30e46c0daefd30de7d563c72322f9e4cf7cbac52ef0f667b13",
+        input={
+                "hdr": 1,
+                "image": img,
+                "steps": 30,
+                "prompt": "a fashion model posing for a photoshoot",
+                "scheduler": "K_EULER_ANCESTRAL",
+                "creativity": 0.40,
+                "guess_mode": False,
+                "resolution": "2048",
+                "resemblance": 0.70,
+                "guidance_scale": 7,
+                "negative_prompt": "ugly face , malformed hands,teeth, tooth, open mouth, longbody, lowres, bad anatomy, bad hands, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, mutant"
+            }
+    )
+    print(output)
+    return output
+
+def create_gif(image_path, duration=500):
+    upload_result = cloudinary.uploader.upload(image_path)["secure_url"]
+    image_path = enhance(upload_result)
+    # image_data = response.content  
+    images = crop_image(image_path[0])
+    gif_bytes = BytesIO()
+    images[0].save(
+        gif_bytes,
+        format='GIF',
+        save_all=True,
+        append_images=images[1:],
+        duration=duration,
+        loop=0
+    )
+    gif_bytes.seek(0)
+    with open('output.gif', 'wb') as f:
+        f.write(gif_bytes.getvalue())
+    return gif_bytes.getvalue()
+    
+    
+def crop_image(image_url):
+    # Load the image using PIL
+    response = requests.get(image_url, stream=True)
+    image = Image.open(response.raw)
+    
+    # Get dimensions of the image
+    width, height = image.size
+    
+    # Define rows and columns for cropping
+    rows, cols = 2, 2
+    
+    # Calculate the width and height of each sub-image
+    sub_width = width // cols
+    sub_height = height // rows
+    
+    extracted_img = []
+    
+    # Iterate over each row and column
+    for y in range(rows):
+        for x in range(cols):
+            # Calculate coordinates for cropping
+            left = x * sub_width
+            upper = y * sub_height
+            right = left + sub_width
+            lower = upper + sub_height
+            
+            # Crop the image
+            sub_image = image.crop((left, upper, right, lower))
+            
+            # Append the cropped image to the list
+            extracted_img.append(sub_image)
+    
+    return extracted_img
+
 with tabs[0]:
     # Sidebar
+    st.write("use the side bar ")
     with st.sidebar:
         # Image input fields
         garment_image = st.file_uploader("Garment Image", type=["jpg", "png", "jpeg"])
@@ -144,49 +223,59 @@ with tabs[1]:
                                 tabs[0].sidebar.upload_state.value = img
 
 # BetterLook Tab
+# with tabs[2]:
+#     # Display output image from VTON tab
+#     if 'output_img_path' in locals():
+#         st.image(Image.open(output_img_path), use_column_width=True, caption="Output Image")
+#     else:
+#         st.write("No output image available. Please run the model in the VTON tab first.")
+
+#     # Button to send output image to multi-view diffusion model
+#     if st.button("Enhance Image") and 'output_img_path' in locals():
+#         with st.spinner("Enhancing the image..."):
+#             client = Client("dylanebert/multi-view-diffusion")
+#             result = client.predict(
+#                 output_img_path,  # File path of the output image
+#                 "a model wearing clothes for a photoshoot",
+#                 api_name="/image_to_mv"
+#             )
+#             enhanced_image = Image.open(result)
+
+#         # Display enhanced image
+#         st.image(enhanced_image, caption="Enhanced Image", use_column_width=True)
+
+
 with tabs[2]:
-    # Display output image from VTON tab
-    if 'output_img_path' in locals():
-        st.image(Image.open(output_img_path), use_column_width=True, caption="Output Image")
-    else:
-        st.write("No output image available. Please run the model in the VTON tab first.")
-
-    # Button to send output image to multi-view diffusion model
-    if st.button("Enhance Image") and 'output_img_path' in locals():
-        with st.spinner("Enhancing the image..."):
-            client = Client("dylanebert/multi-view-diffusion")
-            result = client.predict(
-                output_img_path,  # File path of the output image
-                "a model wearing clothes for a photoshoot",
-                api_name="/image_to_mv"
-            )
-            enhanced_image = Image.open(result)
-
-        # Display enhanced image
-        st.image(enhanced_image, caption="Enhanced Image", use_column_width=True)
-
-
-with tabs[3]:
     st.title("Multi-View Diffusion")
 
-    model = MultiViewDiffusionModel()
-
-    uploaded_image = st.file_uploader("Upload Image", type=["jpg", "jpeg", "png"])
-    if uploaded_image is not None:
-        cloudinary.config(
-            cloud_name=config('CLOUD_NAME'),
-            api_key=config('API_KEY'),
-            api_secret=config('API_SECRET')
-        )
-        upload_result = cloudinary.uploader.upload(uploaded_image)
+    if 'output_img_path' in locals():
+        # st.image(Image.open(output_img_path), use_column_width=True, caption="Output Image")
         text_input = 'fashion model standing for a photo shoot'
-
-        if st.button("Generate Output"):
+        model = MultiViewDiffusionModel()
+        # if st.button("Generate Output"):
+        with st.spinner("wait for gif to get generate ...."):
             if text_input:
-                image_url = upload_result["secure_url"]
-                output_image = model.make_prediction(image_url, text_input)
-                st.image(output_image, caption="Output Image", use_column_width=True)
+                # image_url = upload_result["secure_url"]
+                res_image = model.make_prediction(output_img_path, text_input)
+                with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as tmp_output_img:
+                    res_image.save(tmp_output_img.name)
+                    res_img_path = tmp_output_img.name
+                output_gif = create_gif(res_img_path)
+                st.image(output_gif, caption="Output Image", use_column_width=True)
             else:
                 st.warning("Please provide a description.")
+        # else:
+        #     st.warning("Please upload an image.")
     else:
-        st.warning("Please upload an image.")
+        st.write("No output image available. Please run the model in the VTON tab first.")
+    
+
+    # uploaded_image = st.file_uploader("Upload Image", type=["jpg", "jpeg", "png"])
+    # if uploaded_image is not None:
+    #     cloudinary.config(
+    #         cloud_name=config('CLOUD_NAME'),
+    #         api_key=config('API_KEY'),
+    #         api_secret=config('API_SECRET')
+    #     )
+    #     upload_result = cloudinary.uploader.upload(uploaded_image)
+

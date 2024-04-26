@@ -5,6 +5,8 @@ from io import BytesIO
 import io
 import cloudinary.uploader
 from decouple import config
+from gif_gen import create_gif
+import tempfile
 
 class MultiViewDiffusionModel:
     def __init__(self):
@@ -32,6 +34,13 @@ def main():
             if text_input:
                 image_url = upload_result["secure_url"]
                 output_image = model.make_prediction(image_url, text_input)
+                with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as tmp_output_img:
+                    output_image.save(tmp_output_img.name)
+                    output_img_path = tmp_output_img.name
+                output_gif = create_gif(output_img_path)
+                st.image(output_gif, caption="Output Image", use_column_width=True)
+                return output_gif
+                st.image(output_gif_bytes, caption="Output GIF")
                 st.image(output_image, caption="Output Image", use_column_width=True)
             else:
                 st.warning("Please provide a description.")
@@ -40,4 +49,5 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    gif = main()
+    print(gif)
