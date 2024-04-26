@@ -3,13 +3,12 @@ import os
 from PIL import Image as Img
 
 def create_gif(images, output_gif_path, duration=500):
-    # Save as GIF
     images[0].save(
         output_gif_path,
         save_all=True,
         append_images=images[1:],
         duration=duration,
-        loop=0  # 0 means infinite loop
+        loop=0
     )
 
 
@@ -32,7 +31,6 @@ def crop_image(fold_name,img_path):
             extracted_img.append(pil_image)
             filename = f"{fold_name}/cropped_img_{y}_{x}.jpg"
             pil_image.save(filename)
-
     return extracted_img
 
 output_gif_path = f"outputs/testcase1.gif"
