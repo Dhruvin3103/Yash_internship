@@ -40,8 +40,6 @@ def main():
                 output_gif = create_gif(output_img_path)
                 st.image(output_gif, caption="Output Image", use_column_width=True)
                 return output_gif
-                st.image(output_gif_bytes, caption="Output GIF")
-                st.image(output_image, caption="Output Image", use_column_width=True)
             else:
                 st.warning("Please provide a description.")
     else:

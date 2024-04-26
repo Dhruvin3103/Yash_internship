@@ -73,37 +73,21 @@ def create_gif(image_path, duration=500):
         f.write(gif_bytes.getvalue())
     return gif_bytes.getvalue()
     
-    
 def crop_image(image_url):
-    # Load the image using PIL
     response = requests.get(image_url, stream=True)
     image = Image.open(response.raw)
-    
-    # Get dimensions of the image
     width, height = image.size
-    
-    # Define rows and columns for cropping
     rows, cols = 2, 2
-    
-    # Calculate the width and height of each sub-image
     sub_width = width // cols
     sub_height = height // rows
-    
     extracted_img = []
-    
-    # Iterate over each row and column
     for y in range(rows):
         for x in range(cols):
-            # Calculate coordinates for cropping
             left = x * sub_width
             upper = y * sub_height
             right = left + sub_width
             lower = upper + sub_height
-            
-            # Crop the image
             sub_image = image.crop((left, upper, right, lower))
-            
-            # Append the cropped image to the list
             extracted_img.append(sub_image)
     
     return extracted_img
@@ -222,34 +206,10 @@ with tabs[1]:
                             if submit_button:
                                 tabs[0].sidebar.upload_state.value = img
 
-# BetterLook Tab
-# with tabs[2]:
-#     # Display output image from VTON tab
-#     if 'output_img_path' in locals():
-#         st.image(Image.open(output_img_path), use_column_width=True, caption="Output Image")
-#     else:
-#         st.write("No output image available. Please run the model in the VTON tab first.")
-
-#     # Button to send output image to multi-view diffusion model
-#     if st.button("Enhance Image") and 'output_img_path' in locals():
-#         with st.spinner("Enhancing the image..."):
-#             client = Client("dylanebert/multi-view-diffusion")
-#             result = client.predict(
-#                 output_img_path,  # File path of the output image
-#                 "a model wearing clothes for a photoshoot",
-#                 api_name="/image_to_mv"
-#             )
-#             enhanced_image = Image.open(result)
-
-#         # Display enhanced image
-#         st.image(enhanced_image, caption="Enhanced Image", use_column_width=True)
-
-
 with tabs[2]:
     st.title("Multi-View Diffusion")
 
     if 'output_img_path' in locals():
-        # st.image(Image.open(output_img_path), use_column_width=True, caption="Output Image")
         text_input = 'fashion model standing for a photo shoot'
         model = MultiViewDiffusionModel()
         # if st.button("Generate Output"):
@@ -264,18 +224,6 @@ with tabs[2]:
                 st.image(output_gif, caption="Output Image", use_column_width=True)
             else:
                 st.warning("Please provide a description.")
-        # else:
-        #     st.warning("Please upload an image.")
     else:
         st.write("No output image available. Please run the model in the VTON tab first.")
     
-
-    # uploaded_image = st.file_uploader("Upload Image", type=["jpg", "jpeg", "png"])
-    # if uploaded_image is not None:
-    #     cloudinary.config(
-    #         cloud_name=config('CLOUD_NAME'),
-    #         api_key=config('API_KEY'),
-    #         api_secret=config('API_SECRET')
-    #     )
-    #     upload_result = cloudinary.uploader.upload(uploaded_image)
-
