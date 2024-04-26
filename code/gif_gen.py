@@ -34,5 +34,5 @@ def crop_image(fold_name,img_path):
     return extracted_img
 
 output_gif_path = f"outputs/testcase1.gif"
-create_gif(crop_image('extracted_img','test_case\multi_img.png'), output_gif_path)
+create_gif(crop_image('extracted_img','test_case\test3.png'), output_gif_path)
 print(f"GIF created and saved at {output_gif_path}")
