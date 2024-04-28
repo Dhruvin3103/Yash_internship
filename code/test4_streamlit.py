@@ -2,6 +2,7 @@ import streamlit as st
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
 from PIL import Image
 from io import BytesIO
@@ -49,7 +50,9 @@ def scrape_from_bewakoof(search_query, more_images):
     return result        
 
 def scrape_from_amazon(search_query, more_images):
-    driver = webdriver.Chrome()
+    chrome_options = Options()
+    chrome_options.add_argument("--disable-notifications")
+    driver = webdriver.Chrome(options=chrome_options)
     result = []
     
     driver.get("https://www.amazon.in/")

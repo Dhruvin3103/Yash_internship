@@ -31,14 +31,16 @@ def enhance(img):
                 "negative_prompt": "ugly face , malformed hands,teeth, tooth, open mouth, longbody, lowres, bad anatomy, bad hands, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, mutant"
             }
     )
-    print(output)
-    return output
+    print(output[0],'enhance wala ')
+    return output[0]
 
 def create_gif(image_path, duration=500):
+    print('okey dokey : )')
     upload_result = cloudinary.uploader.upload(image_path)["secure_url"]
     image_path = enhance(upload_result)
     # image_data = response.content  
-    images = crop_image(image_path[0])
+    images = crop_image(image_path)
+    # images = crop_image(upload_result)
     gif_bytes = BytesIO()
     images[0].save(
         gif_bytes,
@@ -49,7 +51,7 @@ def create_gif(image_path, duration=500):
         loop=0
     )
     gif_bytes.seek(0)
-    with open('output.gif', 'wb') as f:
+    with open('output3.gif', 'wb') as f:
         f.write(gif_bytes.getvalue())
     return gif_bytes.getvalue()
     
@@ -63,7 +65,7 @@ def crop_image(image_url):
     width, height = image.size
     
     # Define rows and columns for cropping
-    rows, cols = 2, 2
+    rows, cols = 2, 3 
     
     # Calculate the width and height of each sub-image
     sub_width = width // cols
@@ -112,7 +114,7 @@ def crop_image(image_url):
 #             extracted_img.append(pil_image)
 #     return extracted_img
 
-output_gif = create_gif('test_case/mv_img6.png')
+# output_gif = create_gif('test_case/image.png')
 
 
 # st.image(output_gif_bytes, caption="Output GIF")
