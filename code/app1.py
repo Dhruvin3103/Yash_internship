@@ -54,16 +54,17 @@ def enhance(img):
         "batouresearch/magic-image-refiner:507ddf6f977a7e30e46c0daefd30de7d563c72322f9e4cf7cbac52ef0f667b13",
         input={
                 "hdr": 1,
+                "seed": 50,
                 "image": img,
-                "steps": 30,
-                "prompt": "a fashion model posing for a photoshoot",
+                "steps": 40,
+                "prompt": "A Vogue model standing for photoshoot in multiple angles , 8k , photorealistic , urban street photography, highly detailed ,vivid, rich , canoneos 5d mark iv",
                 "scheduler": "K_EULER_ANCESTRAL",
                 "creativity": 0.40,
                 "guess_mode": False,
                 "resolution": "2048",
                 "resemblance": 0.70,
                 "guidance_scale": 7,
-                "negative_prompt": "ugly face , malformed hands,teeth, tooth, open mouth, longbody, lowres, bad anatomy, bad hands, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, mutant"
+                "negative_prompt": "Additional arms, Extra legs, Unpleasant proportions, Long neck, Low-grade, Low resolution, Lack of arms legs, Unhealthy, Genetic variation, Beyond the frame, Inserted text, Unattractive, Lowest quality, Extra limbs, Additional fingers, Extra body parts, Changed limbs, Person with a missing limb, Uneven ears, Bad body structure, Bad eyes, face, Facial hair, Injured finger, hand, leg, wrist, Animated drawing, Immature, Cloned facial, features, Collapsed eye makeup, Joined limbs, Connected, Dead body, Person with physical challenges, Cut-off head, Sad, Dried out, Two-faced, Duplicated characteristics, Creepy, Extended neck"
             }
     )
     print(output)
@@ -168,7 +169,7 @@ with tabs[0]:
         # Image input fields
         garment_image = st.file_uploader("Garment Image", type=["jpg", "png", "jpeg"])
         model_image = st.file_uploader("Model Image", type=["jpg", "png", "jpeg"])
-        output_img = st.file_uploader("output Image", type=["jpg", "png", "jpeg"])
+        output_img = st.file_uploader("Image for GIF", type=["jpg", "png", "jpeg"])
         # Radio button for category selection
         category = st.radio("Select Category", ["upper_body", "lower_body", "dresses"])
         # Text input box for garment description
