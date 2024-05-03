@@ -1,0 +1,6 @@
+gpu,model name ,gpu size ,charge ,time to run,
+A10G,multiview(4 view),46gb,$1.5 per hr ,30 to 60 seconds,hugging face 
+2xA10G,Try one (IDM),92 gb,$3.00 per hr,under 30 seconds,replicate 
+A40, magic refiner,48gb,$2.61 per hr($0.000725 per sec) ,1-2 mins ,replicate 
+,,,,,
+,,,7.11 per hr ,,

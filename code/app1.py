@@ -44,8 +44,6 @@ st.title("State Of The Art VTON")
 tabs = st.tabs(["VTON", "Garment Search","multiview"])
 # VTON Tab
 
-
-
 # some of the utils function : 
 def enhance(img):
     print(img)
@@ -94,7 +92,7 @@ def crop_image(image_url):
     response = requests.get(image_url, stream=True)
     image = Image.open(response.raw)
     width, height = image.size
-    rows, cols = 2, 3
+    rows, cols = 2, 2
     sub_width = width // cols
     sub_height = height // rows
     extracted_img = []
@@ -238,43 +236,43 @@ with tabs[0]:
             output_area.image(output_image, use_column_width=True, caption="Output Image")
 
 
-# with tabs[2]:
-#     st.title("Multi-View Diffusion")
+with tabs[2]:
+    st.title("Multi-View Diffusion")
 
-#     if 'output_img_path' in locals():
-#         text_input = 'fashion model standing for a photo shoot'
-#         model = MultiViewDiffusionModel()
-#         # if st.button("Generate Output"):
-#         with st.spinner("wait for gif to get generate ...."):
-#             if text_input:
-#                 # image_url = upload_result["secure_url"]
-#                 res_image = model.make_prediction(output_img_path, text_input)
-#                 with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as tmp_output_img:
-#                     res_image.save(tmp_output_img.name)
-#                     res_img_path = tmp_output_img.name
-#                 output_gif = create_gif(res_img_path)
-#                 st.image(output_gif, caption="Output Image", use_column_width=True)
-#             else:
-#                 st.warning("Please provide a description.")
-#     else:
-#         st.write("No output image available. Please run the model in the VTON tab first.")
+    if 'output_img_path' in locals():
+        text_input = 'fashion model standing for a photo shoot'
+        model = MultiViewDiffusionModel()
+        # if st.button("Generate Output"):
+        with st.spinner("wait for gif to get generate ...."):
+            if text_input:
+                # image_url = upload_result["secure_url"]
+                res_image = model.make_prediction(output_img_path, text_input)
+                with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as tmp_output_img:
+                    res_image.save(tmp_output_img.name)
+                    res_img_path = tmp_output_img.name
+                output_gif = create_gif(res_img_path)
+                st.image(output_gif, caption="Output Image", use_column_width=True)
+            else:
+                st.warning("Please provide a description.")
+    else:
+        st.write("No output image available. Please run the model in the VTON tab first.")
    
    
     
-with tabs[2]:
-    st.title("Multi-View ")
+# with tabs[2]:
+#     st.title("Multi-View ")
 
-    if 'output_img_path' in locals():
-        with st.spinner("wait for gif to get generate ...."):
-            url = cloudinary.uploader.upload(output_img_path)["secure_url"]
-            res_image = gen_mul_six(url,replicate)
-            res_image = Image.open(requests.get(res_image, stream=True).raw)
-            with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as tmp_output_img:
-                    res_image.save(tmp_output_img.name)
-                    res_img_path = tmp_output_img.name
-            output_gif = create_gif(res_img_path)
-            # print(output_gif,'gif idar hai : )')
-            st.image(output_gif, caption="Output Image", use_column_width=True)
-    else:
-        st.write("No output image available. Please run the model in the VTON tab first.")
+#     if 'output_img_path' in locals():
+#         with st.spinner("wait for gif to get generate ...."):
+#             url = cloudinary.uploader.upload(output_img_path)["secure_url"]
+#             res_image = gen_mul_six(url,replicate)
+#             res_image = Image.open(requests.get(res_image, stream=True).raw)
+#             with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as tmp_output_img:
+#                     res_image.save(tmp_output_img.name)
+#                     res_img_path = tmp_output_img.name
+#             output_gif = create_gif(res_img_path)
+#             # print(output_gif,'gif idar hai : )')
+#             st.image(output_gif, caption="Output Image", use_column_width=True)
+#     else:
+#         st.write("No output image available. Please run the model in the VTON tab first.")
             
